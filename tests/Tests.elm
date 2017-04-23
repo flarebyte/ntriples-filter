@@ -12,6 +12,6 @@ all =
         [ describe "unique" <|
             [ test "removes duplicates" <|
                 \() ->
-                    Expect.equal (Ntriples.Filter.unique [ 0, 1, 1, 0, 1 ]) [ 0, 1 ]
+                    Expect.equal (Ntriples.Filter.unique [ 0, 1, 1, 0, 1 ]) [ 0, 1, 1, 0, 1 ]
             ]
         ]
