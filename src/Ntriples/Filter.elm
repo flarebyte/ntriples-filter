@@ -1,9 +1,9 @@
-module Ntriples.Filter exposing (Triple, TripleFilter, filterTriples)
+module Ntriples.Filter exposing (Triple, FieldId, FieldComparator, FilterExpr, filterTriples)
 
 {-| Convenience functions for filtering list of ntriples
 
 # Basics
-@docs  Triple, TripleFilter, filterTriples
+@docs  Triple, FieldId, FieldComparator, FilterExpr, filterTriples
 
 -}
 import List exposing (..)
@@ -15,17 +15,17 @@ import String
 {-| A rdf triple -}
 type alias Triple = { subject : String, predicate : String, object: String }
 
-{-| A rdf triple filter -}
-type alias TripleFilter = { subject : Maybe String, predicate : Maybe String, object: Maybe String }
-
+{-| an id of the field -}
 type FieldId = Subject | Predicate | Obj
 
+{-| a boolean comparator for a string -}
 type FieldComparator = Ignore
   | IsEmpty
   | Equal String
   | StartsWith String
   | Contains String
 
+{-| a filter expression -}
 type FilterExpr
     = Boolean Bool
     | Not FilterExpr
@@ -71,14 +71,6 @@ tripleCompare expr triple =
       fieldCompare comp (stringOfField fieldId triple)
 
 {-| filter a list of triples -}
-filterTriples: TripleFilter -> List Triple -> List Triple
+filterTriples: FilterExpr -> List Triple -> List Triple
 filterTriples tripleFilter list =
-  List.filter (triplesPredicate tripleFilter) list
-
-maybeEqual: Maybe String -> String -> Bool
-maybeEqual expected actual =
-  Maybe.map2 (==) expected (Just actual) |> Maybe.withDefault True
-
-triplesPredicate: TripleFilter -> (Triple -> Bool)
-triplesPredicate tripleFilter =
-  \triple  -> maybeEqual tripleFilter.subject triple.subject && maybeEqual tripleFilter.predicate triple.predicate && maybeEqual tripleFilter.object triple.object
+  List.filter (tripleCompare tripleFilter) list
