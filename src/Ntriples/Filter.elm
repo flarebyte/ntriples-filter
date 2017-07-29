@@ -1,4 +1,4 @@
-module Ntriples.Filter exposing (Triple, FieldId, FieldComparator, FilterExpr, filterTriples)
+module Ntriples.Filter exposing (..)
 
 {-| Convenience functions for filtering list of ntriples
 
@@ -21,7 +21,7 @@ type FieldId = Subject | Predicate | Obj
 {-| a boolean comparator for a string -}
 type FieldComparator = Ignore
   | IsEmpty
-  | Equal String
+  | Equals String
   | StartsWith String
   | Contains String
 
@@ -49,7 +49,7 @@ fieldCompare comparator value =
       True
     IsEmpty ->
         String.isEmpty value
-    Equal ref ->
+    Equals ref ->
         value == ref
     StartsWith ref ->
         String.startsWith ref value
