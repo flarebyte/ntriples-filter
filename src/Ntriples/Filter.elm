@@ -3,7 +3,7 @@ module Ntriples.Filter exposing (..)
 {-| Convenience functions for filtering list of ntriples
 
 # Basics
-@docs  Triple, FieldId, FieldComparator, FilterExpr, filterTriples
+@docs  Triple, FieldComparator, FilterExpr, filterTriples
 
 -}
 import List exposing (..)
@@ -14,9 +14,6 @@ import String
 
 {-| A rdf triple -}
 type alias Triple = { subject : String, predicate : String, object: String }
-
-{-| an id of the field -}
-type FieldId = Subject | Predicate | Obj
 
 {-| a boolean comparator for a string -}
 type FieldComparator = Ignore
@@ -31,15 +28,10 @@ type FilterExpr
     | Not FilterExpr
     | And FilterExpr FilterExpr
     | Or FilterExpr FilterExpr
-    | Field FieldComparator FieldId
+    | WithSubject FieldComparator
+    | WithPredicate FieldComparator
+    | WithObject FieldComparator
 
-{-| get the string of a triple field -}
-stringOfField: FieldId -> Triple -> String
-stringOfField fieldId triple =
-  case fieldId of
-    Subject -> triple.subject
-    Predicate -> triple.predicate
-    Obj -> triple.object
 
 {-| compare a single field and return true if must be selected -}
 fieldCompare: FieldComparator -> String -> Bool
@@ -67,8 +59,12 @@ tripleCompare expr triple =
         (tripleCompare a triple) && (tripleCompare b triple)
     Or a b  ->
         (tripleCompare a triple) || (tripleCompare b triple)
-    Field comp fieldId ->
-      fieldCompare comp (stringOfField fieldId triple)
+    WithSubject comp ->
+      fieldCompare comp triple.subject
+    WithPredicate comp ->
+      fieldCompare comp triple.predicate
+    WithObject comp ->
+      fieldCompare comp triple.object
 
 {-| filter a list of triples -}
 filterTriples: FilterExpr -> List Triple -> List Triple
