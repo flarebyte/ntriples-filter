@@ -1,51 +1,31 @@
-module Ntriples.Filter
-    exposing
-        (
-        Triples
-        , TriplesList
-        , toNodeNames
-        )
+module Ntriples.Filter exposing (Triple, TripleFilter, filterTriples)
 
 {-| Convenience functions for filtering list of ntriples
 
 # Basics
-@docs  unique, Triples, TriplesList, toNodeNames
+@docs  Triple, TripleFilter, filterTriples
 
 -}
 import List exposing (..)
-import Graph exposing (Graph, NodeId, Node, Edge, NodeContext)
-
+import Maybe
 
 -- TYPES
 
 {-| A rdf triple -}
-type alias Triples = { subject : String, predicate : String, object: String }
+type alias Triple = { subject : String, predicate : String, object: String }
 
+{-| A rdf triple filter -}
+type alias TripleFilter = { subject : Maybe String, predicate : Maybe String, object: Maybe String }
 
-{-| A list of rdf triple -}
-type alias TriplesList = List Triples
+{-| filter a list of triples -}
+filterTriples: TripleFilter -> List Triple -> List Triple
+filterTriples tripleFilter list =
+  List.filter (triplesPredicate tripleFilter) list
 
-type alias TriplesData =
-    { list : TriplesList
-    }
+maybeEqual: Maybe String -> String -> Bool
+maybeEqual expected actual =
+  Maybe.map2 (==) expected (Just actual) |> Maybe.withDefault True
 
-type alias Pathway = List String
-
-
-toTriplesData: TriplesList -> TriplesData
-toTriplesData list =
-  { list = list
-  }
-
-{-| Remove duplicate values, keeping the first instance of each element which appears more than once.
-
-    unique [0,1,1,0,1] == [0,1]
--}
-toNodeNames: TriplesList -> List String
-toNodeNames tlist =
-  List.map .subject tlist
-
-
-findByPath : TriplesData -> Pathway -> String
-findByPath model pathway =
-  String.join "--" pathway
+triplesPredicate: TripleFilter -> (Triple -> Bool)
+triplesPredicate tripleFilter =
+  \triple  -> maybeEqual tripleFilter.subject triple.subject && maybeEqual tripleFilter.predicate triple.predicate && maybeEqual tripleFilter.object triple.object
