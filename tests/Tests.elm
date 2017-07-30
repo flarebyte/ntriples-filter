@@ -43,5 +43,15 @@ all =
                     Expect.equal
                     (filterTriples (WithObject (IsEmpty)) allTriples)
                     [t2]
+              , test "filter by StartsWith" <|
+                \() ->
+                    Expect.equal
+                    (filterTriples (WithObject (StartsWith "some")) allTriples)
+                    [t3]
+              , test "filter by Contains" <|
+                \() ->
+                    Expect.equal
+                    (filterTriples (WithObject (Contains "ome")) allTriples)
+                    [t3]
             ]
         ]
