@@ -3,12 +3,13 @@ module Ntriples.Filter exposing (..)
 {-| Convenience functions for filtering list of ntriples
 
 # Basics
-@docs  Triple, FieldComparator, FilterExpr, filterTriples
+@docs  Triple, FieldComparator, FilterExpr, filterTriples, fieldCompare, tripleCompare
 
 -}
 import List exposing (..)
 import Maybe
 import String
+import Regex exposing(..)
 
 -- TYPES
 
@@ -20,7 +21,12 @@ type FieldComparator = Ignore
   | IsEmpty
   | Equals String
   | StartsWith String
+  | EndsWith String
   | Contains String
+  | Regx Regex
+  | IsTrue
+  | IsFalse
+  | EqualsAny (List String)
 
 {-| a filter expression -}
 type FilterExpr
@@ -31,7 +37,6 @@ type FilterExpr
     | WithSubject FieldComparator
     | WithPredicate FieldComparator
     | WithObject FieldComparator
-
 
 {-| compare a single field and return true if must be selected -}
 fieldCompare: FieldComparator -> String -> Bool
@@ -45,9 +50,21 @@ fieldCompare comparator value =
         value == ref
     StartsWith ref ->
         String.startsWith ref value
+    EndsWith ref ->
+        String.endsWith ref value
     Contains ref ->
         String.contains ref value
+    Regx regex ->
+        Regex.contains regex value
+    IsTrue ->
+        value == "true"
+    IsFalse ->
+        value == "true"
+    EqualsAny list ->
+        List.any (\n -> n == value) list
 
+
+{-| Checks if a triple satisfies a FilterExpr -}
 tripleCompare: FilterExpr -> Triple -> Bool
 tripleCompare expr triple =
   case expr of
