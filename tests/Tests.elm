@@ -13,8 +13,11 @@ t5 = { subject = "s5", predicate = "name", object = "subject5" }
 t5a = { subject = "s5", predicate = "desc", object = "desc5" }
 t5b = { subject = "s5", predicate = "label", object = "label5" }
 t6 = { subject = "s6", predicate = "flag", object = "true" }
+t7 = { subject = "s7", predicate = "code", object = "5" }
+t8 = { subject = "s8", predicate = "code", object = "-5" }
+t9 = { subject = "s9", predicate = "code", object = "7.4" }
 
-allTriples = [t1, t2, t3, t4, t5, t5a, t5b, t6]
+allTriples = [t1, t2, t3, t4, t5, t5a, t5b, t6, t7, t8, t9]
 
 all : Test
 all =
@@ -39,7 +42,7 @@ all =
                 \() ->
                     Expect.equal
                     (filterTriples (Not( WithSubject (Equals "s5"))) allTriples)
-                    [t1, t2, t3, t4, t6]
+                    [t1, t2, t3, t4, t6, t7, t8, t9]
               , test "filter by empty" <|
                 \() ->
                     Expect.equal
@@ -75,5 +78,25 @@ all =
                     Expect.equal
                     (filterTriples (WithObject (EqualsAny ["subject1", "subject4"])) allTriples)
                     [t1, t4]
+              , test "filter by GreaterThan" <|
+                \() ->
+                    Expect.equal
+                    (filterTriples (WithObject (GreaterThan 6.3)) allTriples)
+                    [t9]
+              , test "filter by GreaterThanOrEqual" <|
+                \() ->
+                    Expect.equal
+                    (filterTriples (WithObject (GreaterThanOrEqual 5)) allTriples)
+                    [t7, t9]
+              , test "filter by LessThan" <|
+                \() ->
+                    Expect.equal
+                    (filterTriples (WithObject (LessThan 0)) allTriples)
+                    [t8]
+              , test "filter by LessThanOrEqual" <|
+                \() ->
+                    Expect.equal
+                    (filterTriples (WithObject (LessThanOrEqual 5)) allTriples)
+                    [t7, t8]
             ]
         ]

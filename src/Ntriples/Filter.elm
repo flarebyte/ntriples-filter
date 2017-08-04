@@ -9,7 +9,8 @@ module Ntriples.Filter exposing (..)
 import List exposing (..)
 import Maybe
 import String
-import Regex exposing(..)
+import Regex exposing (..)
+import Result exposing (..)
 
 -- TYPES
 
@@ -27,6 +28,11 @@ type FieldComparator = Ignore
   | IsTrue
   | IsFalse
   | EqualsAny (List String)
+  | GreaterThan Float
+  | GreaterThanOrEqual Float
+  | LessThan Float
+  | LessThanOrEqual Float
+
 
 {-| a filter expression -}
 type FilterExpr
@@ -62,6 +68,14 @@ fieldCompare comparator value =
         value == "true"
     EqualsAny list ->
         List.any (\n -> n == value) list
+    GreaterThan ref ->
+      Result.map (\n -> n > ref) (String.toFloat value) |> Result.withDefault False
+    GreaterThanOrEqual ref ->
+      Result.map (\n -> n >= ref) (String.toFloat value) |> Result.withDefault False
+    LessThan ref ->
+      Result.map (\n -> n < ref) (String.toFloat value) |> Result.withDefault False
+    LessThanOrEqual ref ->
+      Result.map (\n -> n <= ref) (String.toFloat value) |> Result.withDefault False
 
 
 {-| Checks if a triple satisfies a FilterExpr -}
