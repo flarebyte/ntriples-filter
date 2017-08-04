@@ -3,7 +3,7 @@ module Ntriples.Filter exposing (..)
 {-| Convenience functions for filtering list of ntriples
 
 # Basics
-@docs  Triple, FieldComparator, FilterExpr, filterTriples, fieldCompare, tripleCompare
+@docs  Triple, FieldComparator, FilterExpr, filter, fieldCompare, tripleCompare
 
 -}
 import List exposing (..)
@@ -32,6 +32,7 @@ type FieldComparator = Ignore
   | GreaterThanOrEqual Float
   | LessThan Float
   | LessThanOrEqual Float
+  | Custom (String ->String -> Bool) String
 
 
 {-| a filter expression -}
@@ -76,6 +77,8 @@ fieldCompare comparator value =
       Result.map (\n -> n < ref) (String.toFloat value) |> Result.withDefault False
     LessThanOrEqual ref ->
       Result.map (\n -> n <= ref) (String.toFloat value) |> Result.withDefault False
+    Custom func ref ->
+        func ref value
 
 
 {-| Checks if a triple satisfies a FilterExpr -}
@@ -98,6 +101,6 @@ tripleCompare expr triple =
       fieldCompare comp triple.object
 
 {-| filter a list of triples -}
-filterTriples: FilterExpr -> List Triple -> List Triple
-filterTriples tripleFilter list =
+filter: FilterExpr -> List Triple -> List Triple
+filter tripleFilter list =
   List.filter (tripleCompare tripleFilter) list

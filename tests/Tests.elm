@@ -19,84 +19,92 @@ t9 = { subject = "s9", predicate = "code", object = "7.4" }
 
 allTriples = [t1, t2, t3, t4, t5, t5a, t5b, t6, t7, t8, t9]
 
+custom: String -> String -> Bool
+custom a b = a == b
+
 all : Test
 all =
     describe "Ntriples.Filter"
-        [ describe "filterTriples" <|
+        [ describe "filter" <|
             [ test "filter by object value" <|
                 \() ->
                     Expect.equal
-                    (filterTriples (WithObject (Equals "subject4")) allTriples)
+                    (filter (WithObject (Equals "subject4")) allTriples)
                     [t4]
               , test "filter by object value and predicate" <|
                 \() ->
                     Expect.equal
-                    (filterTriples (And (WithPredicate (Equals "name"))(WithObject (Equals "subject4")) ) allTriples)
+                    (filter (And (WithPredicate (Equals "name"))(WithObject (Equals "subject4")) ) allTriples)
                     [t4]
               , test "filter by Subject" <|
                 \() ->
                     Expect.equal
-                    (filterTriples (WithSubject (Equals "s5")) allTriples)
+                    (filter (WithSubject (Equals "s5")) allTriples)
                     [t5, t5a, t5b]
               , test "filter by Not Subject" <|
                 \() ->
                     Expect.equal
-                    (filterTriples (Not( WithSubject (Equals "s5"))) allTriples)
+                    (filter (Not( WithSubject (Equals "s5"))) allTriples)
                     [t1, t2, t3, t4, t6, t7, t8, t9]
               , test "filter by empty" <|
                 \() ->
                     Expect.equal
-                    (filterTriples (WithObject (IsEmpty)) allTriples)
+                    (filter (WithObject (IsEmpty)) allTriples)
                     [t2]
               , test "filter by StartsWith" <|
                 \() ->
                     Expect.equal
-                    (filterTriples (WithObject (StartsWith "some")) allTriples)
+                    (filter (WithObject (StartsWith "some")) allTriples)
                     [t3]
               , test "filter by EndsWith" <|
                 \() ->
                     Expect.equal
-                    (filterTriples (WithObject (EndsWith "1")) allTriples)
+                    (filter (WithObject (EndsWith "1")) allTriples)
                     [t1]
               , test "filter by Contains" <|
                 \() ->
                     Expect.equal
-                    (filterTriples (WithObject (Contains "ome")) allTriples)
+                    (filter (WithObject (Contains "ome")) allTriples)
                     [t3]
               , test "filter by Regx" <|
                 \() ->
                     Expect.equal
-                    (filterTriples (WithObject (Regx (regex "ome" ))) allTriples)
+                    (filter (WithObject (Regx (regex "ome" ))) allTriples)
                     [t3]
               , test "filter by IsTrue" <|
                 \() ->
                     Expect.equal
-                    (filterTriples (WithObject (IsTrue)) allTriples)
+                    (filter (WithObject (IsTrue)) allTriples)
                     [t6]
               , test "filter by EqualsAny" <|
                 \() ->
                     Expect.equal
-                    (filterTriples (WithObject (EqualsAny ["subject1", "subject4"])) allTriples)
+                    (filter (WithObject (EqualsAny ["subject1", "subject4"])) allTriples)
                     [t1, t4]
               , test "filter by GreaterThan" <|
                 \() ->
                     Expect.equal
-                    (filterTriples (WithObject (GreaterThan 6.3)) allTriples)
+                    (filter (WithObject (GreaterThan 6.3)) allTriples)
                     [t9]
               , test "filter by GreaterThanOrEqual" <|
                 \() ->
                     Expect.equal
-                    (filterTriples (WithObject (GreaterThanOrEqual 5)) allTriples)
+                    (filter (WithObject (GreaterThanOrEqual 5)) allTriples)
                     [t7, t9]
               , test "filter by LessThan" <|
                 \() ->
                     Expect.equal
-                    (filterTriples (WithObject (LessThan 0)) allTriples)
+                    (filter (WithObject (LessThan 0)) allTriples)
                     [t8]
               , test "filter by LessThanOrEqual" <|
                 \() ->
                     Expect.equal
-                    (filterTriples (WithObject (LessThanOrEqual 5)) allTriples)
+                    (filter (WithObject (LessThanOrEqual 5)) allTriples)
                     [t7, t8]
+              , test "filter by Custom" <|
+                \() ->
+                    Expect.equal
+                    (filter (WithObject (Custom custom "subject4")) allTriples)
+                    [t4]
             ]
         ]
