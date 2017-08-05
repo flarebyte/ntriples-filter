@@ -1,8 +1,8 @@
 {
     "version": "1.0.0",
-    "summary": "Convenience functions for filtering n-triples records",
+    "summary": "This library provides an easy way of filtering a list of simplified n-triples.",
     "repository": "https://github.com/flarebyte/ntriples-filter.git",
-    "license": "MIT",
+    "license": "BSD3",
     "source-directories": [
         "src"
     ],

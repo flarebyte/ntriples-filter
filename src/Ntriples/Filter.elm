@@ -1,6 +1,7 @@
 module Ntriples.Filter exposing (createTriple, filter, FilterExpr(..), FieldComparator(..))
 
 {-| This library provides an easy way of filtering a list of simplified n-triples.
+More about RDF n-triples: https://en.wikipedia.org/wiki/N-Triples
 
 # Basics
 @docs  createTriple, filter
@@ -19,7 +20,7 @@ import Result
 
 {-| A simplified n-triple with a subject, a predicate and an object.
 It is simplified because it does not discriminate between URI, blank node, language or datatype.
-More about rdf n-triples: https://en.wikipedia.org/wiki/N-Triples
+More about RDF n-triples: https://en.wikipedia.org/wiki/N-Triples
 -}
 type alias Triple = { subject : String, predicate : String, object: String }
 
@@ -94,7 +95,7 @@ Determine if the field is less or equal to the given float value.
     WithObject (LessThanOrEqual 6.3)
 
 ## Custom
-Determine if the field satified a custom function against the given value.
+Determine if the field satisfies a custom function against the given value.
 
     custom: String -> String -> Bool
     custom a b = a == b
