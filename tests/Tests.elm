@@ -31,11 +31,16 @@ all =
                     Expect.equal
                     (filter (WithObject (Equals "subject4")) allTriples)
                     [t4]
-              , test "filter by object value and predicate" <|
+              , test "filter by object value And predicate" <|
                 \() ->
                     Expect.equal
                     (filter (And (WithPredicate (Equals "name"))(WithObject (Equals "subject4")) ) allTriples)
                     [t4]
+              , test "filter by Or" <|
+                \() ->
+                    Expect.equal
+                    (filter (Or (WithObject (Equals "subject1"))(WithObject (Equals "subject4")) ) allTriples)
+                    [t1, t4]
               , test "filter by Subject" <|
                 \() ->
                     Expect.equal

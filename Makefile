@@ -15,3 +15,6 @@ js:
 
 test:
 	cd tests && elm-test Main.elm
+
+doc:
+	elm-make --docs=documentation.json
