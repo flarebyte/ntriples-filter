@@ -2,20 +2,20 @@ module Tests exposing (..)
 
 import Test exposing (describe, test, Test)
 import Expect
-import Ntriples.Filter exposing (..)
-import Regex exposing (..)
+import Ntriples.Filter exposing (createTriple, filter, FilterExpr(..), FieldComparator(..))
+import Regex exposing (regex)
 
-t1 = { subject = "s1", predicate = "name", object = "subject1" }
-t2 = { subject = "s2", predicate = "name", object = "" }
-t3 = { subject = "s3", predicate = "name", object = "some subject3" }
-t4 = { subject = "s4", predicate = "name", object = "subject4" }
-t5 = { subject = "s5", predicate = "name", object = "subject5" }
-t5a = { subject = "s5", predicate = "desc", object = "desc5" }
-t5b = { subject = "s5", predicate = "label", object = "label5" }
-t6 = { subject = "s6", predicate = "flag", object = "true" }
-t7 = { subject = "s7", predicate = "code", object = "5" }
-t8 = { subject = "s8", predicate = "code", object = "-5" }
-t9 = { subject = "s9", predicate = "code", object = "7.4" }
+t1 = createTriple "s1" "name" "subject1"
+t2 = createTriple "s2" "name" ""
+t3 = createTriple "s3" "name" "some subject3"
+t4 = createTriple "s4" "name" "subject4"
+t5 = createTriple "s5" "name" "subject5"
+t5a = createTriple "s5" "desc" "desc5"
+t5b = createTriple "s5" "label" "label5"
+t6 = createTriple "s6" "flag" "true"
+t7 = createTriple "s7" "code" "5"
+t8 = createTriple "s8" "code" "-5"
+t9 = {subject = "s9", predicate = "code", object = "7.4"}
 
 allTriples = [t1, t2, t3, t4, t5, t5a, t5b, t6, t7, t8, t9]
 

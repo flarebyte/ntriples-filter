@@ -1,16 +1,16 @@
-module Ntriples.Filter exposing (..)
+module Ntriples.Filter exposing (createTriple, filter, FilterExpr(..), FieldComparator(..))
 
 {-| Convenience functions for filtering list of ntriples
 
 # Basics
-@docs  Triple, FieldComparator, FilterExpr, filter, fieldCompare, tripleCompare
+@docs  createTriple, filter, FilterExpr, FieldComparator
 
 -}
-import List exposing (..)
+import List
 import Maybe
 import String
-import Regex exposing (..)
-import Result exposing (..)
+import Regex exposing (Regex)
+import Result
 
 -- TYPES
 
@@ -99,6 +99,10 @@ tripleCompare expr triple =
       fieldCompare comp triple.predicate
     WithObject comp ->
       fieldCompare comp triple.object
+
+{-| Create a triple -}
+createTriple: String -> String -> String -> Triple
+createTriple s p o = { subject = s, predicate = p, object = o }
 
 {-| filter a list of triples -}
 filter: FilterExpr -> List Triple -> List Triple
